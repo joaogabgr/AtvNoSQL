@@ -1,0 +1,126 @@
+MERCADO LIVRE -----------------------------------------------------------------
+
+Usuarios = [
+{
+	id int,
+	Nome string,
+	Idade int,
+	Endereco json: 
+	[{
+		Pais:
+		Estado:
+		Cidade:
+		Bairro:
+		Rua:
+		Numero:
+	}],
+	favoridos json:
+	[{
+		idProduto int:,
+		NomeProduto string:,
+		valor decimal:,
+		link string:
+	}],
+	compras json:
+	[{
+		idProduto int:,
+		NomeProduto string:,
+		Quantidade int:,
+		valor decimal:
+	}]
+}]
+
+Vendedor = [
+{
+	id int,
+	Nome string,
+	Idade int,
+	Endereco json: 
+	{
+		Pais sting:
+		Estado string:
+		Cidade string:
+		Bairro string:
+		Rua string:
+		Numero string:
+	},
+	Vendas json: 
+	[{
+		id int:
+		valor int:
+		comprador json:
+		{
+			id int:
+			nome string:
+		}
+	}]
+}]
+
+Produtos = [
+{
+	id int,
+	nome string,
+	valor decimal,
+	vendedor json:	
+	{
+		idUsuario int:
+		nomeUsuario int:
+	}
+	avaliações json:
+	[{
+		idUsuario int:
+		NomeUsuario: string:
+		avaliação int:
+	}]
+}]
+
+
+LIVRARIA ----------------------------------------------------------------------
+
+Usuario = [
+{
+	id int:,
+	nome string:,
+	idade int:,
+	email string:,
+	senha string:,
+	Emprestimos json:
+	[{
+		idUsuario int:
+		nomeUsuario string:
+		idLivro int:
+		nomeUsuario string:
+		dataDoEmprestimo date:
+		dataDeDevolucao date:
+	}]
+}]
+
+Autores = [
+{
+	id int:,
+	nome string:,
+	idade int:,
+	email string:,
+	senha string:,
+	livros json:
+	[{
+		id int:
+		nome string:
+	}]
+}]
+
+Livros = [
+{
+	id int:,
+	nome string:,
+	autor json:	
+	[{
+		idUsuario int:
+		NomeUsuario: string:
+		avaliação int:
+	}]
+}]
+
+	
+			
+		
