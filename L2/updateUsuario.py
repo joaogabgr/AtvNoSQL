@@ -1,21 +1,19 @@
 import connectMongo
+import listarTodosUsuarios
 import verifyEmail
 
-def criarUsuario():
-
+def updateUsuario():
     selectDatabase = connectMongo.client['MercadoLivre']
     collection = selectDatabase['usuario']
-
-    print('Digite o nome do usuario')
-    nome = input()
-    print('Digite o email do usuario')
+    listarTodosUsuarios.listarTodosUsuarios()
+    print('Digite o email do usuario que deseja atualizar')
     email = input()
-    if(verifyEmail.verifyEmail(email)):
-        print('Email ja cadastrado')
-        return 
-    print('Digite a senha do usuario')
+
+    print('Digite o novo nome')
+    nome = input()
+    print('Digite a nova senha')
     senha = input()
-    print('Digite a idade do usuario')
+    print('Digite a nova idade')
     idade = int(input())
     print('Deseja adicionar um endereco? (s/n)')
     opcao = input()
@@ -48,10 +46,10 @@ def criarUsuario():
     
     new_user = {
         'nome': nome,
-        'email': email,
         'senha': senha,
         'idade': idade,
         'endereco': endereco
     }
 
-    collection.insert_one(new_user)
+    collection.update_one({'email': email}, {'$set': new_user})
+    print('Usuario atualizado com sucesso')

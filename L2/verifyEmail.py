@@ -1,8 +1,10 @@
-def listarTodosUsuarios():
-    import connectMongo
+import connectMongo
 
+def verifyEmail(email):
     selectDatabase = connectMongo.client['MercadoLivre']
     usuarios = selectDatabase['usuario'].find()
 
     for usuario in usuarios:
-        print(usuario['email'])
+        if usuario['email'] == email:
+            return True
+    return False
