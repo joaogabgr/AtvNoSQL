@@ -1,4 +1,5 @@
 import connectMongo
+from controllers import VendedorControllers
 from models import Produtos
 
 selectDatabase = connectMongo.client['MercadoLivre']
@@ -14,6 +15,7 @@ class ProdutosController:
         preco = input('Digite o preço do produto: ')
         estoque = input('Digite o estoque do produto: ')
 
+        VendedorControllers.VendedorControllers().ListarTodosVendedores()
         vendedor = input('Digite o email do vendedor: ')
         vendedor = vendedorCollection.find_one({'email': vendedor})
         if vendedor == None:
@@ -31,22 +33,30 @@ class ProdutosController:
         collection.insert_one(produto.__dict__)
 
     def listarTodosProdutos(self):
-        return collection.find()
+        produtos = collection.find()
+        for produto in produtos:
+            print(f'Nome: {produto['nome']} - Preço: {produto['preco']} - Estoque: {produto['estoque']}')
+        return
     
     def listarProduto(self, nome):
-        if collection.find_one({'nome': nome}) is None:
+        produto = collection.find_one({'nome': nome})
+        if produto is None:
             print('Produto não encontrado')
             return
-        return collection.find_one({'nome': nome})
+        
+        return f'Nome: {produto['nome']} - Preço: {produto['preco']} - Estoque: {produto['estoque']}'
     
     def atualizarProduto(self):
+        ProdutosController.listarTodosProdutos(self)
         nome = input('Digite o nome do produto: ')
         produto = collection.find_one({'nome': nome})
         if produto is None:
             print('Produto não encontrado')
             return
         novoNome = input('Digite o novo nome do produto: ')
-        if collection.find_one({'nome': novoNome}) is not None:
+        if nome == novoNome:
+            print()
+        elif collection.find_one({'nome': novoNome}) is not None:
             print('Produto já cadastrado')
             return
         novoPreco = input('Digite o novo preço do produto: ')
@@ -54,7 +64,7 @@ class ProdutosController:
 
         vendedor = produto['vendedor']
         vendedorCollection.update_one(
-            {'_id': vendedor['_id'], 'produtos.nome': nome},
+            {'email': vendedor['emailVendedor'], 'produtos.nome': nome},
             {'$set': {
             'produtos.$.nome': novoNome,
             'produtos.$.preco': novoPreco,

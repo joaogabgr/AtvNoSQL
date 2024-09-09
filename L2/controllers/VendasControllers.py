@@ -9,20 +9,20 @@ ClienteCollection = selectDatabase['cliente']
 
 class VendasControllers:
     def CriarVenda(self):
-        for clientes in ClienteControllers.ClienteControllers().listarTodosClientes():
-            print(f"Nome: {clientes['nome']} - Email: {clientes['email']}")
+        ClienteControllers.ClienteControllers().listarTodosClientes()
         emailCliente = input('Digite o email do cliente: ')
         
         if ClienteControllers.ClienteControllers().listarCliente(emailCliente) == None:
             return
         
-        for produtos in ProdutosController.ProdutosController().listarTodosProdutos():
-            print(f"Nome: {produtos['nome']} - Valor: {produtos['preco']} - Estoque: {produtos['estoque']}")
+        ProdutosController.ProdutosController().listarTodosProdutos()
 
         nomeProduto = input('Digite o nome do produto: ')
-        produto = ProdutosController.ProdutosController().listarProduto(nomeProduto)
-        if produto == None:
+        produtoTeste = ProdutosController.ProdutosController().listarProduto(nomeProduto)
+        if produtoTeste == None:
             return
+        else:
+            produto = ProdutoCollection.find_one({'nome': nomeProduto})
         
         quantidade = int(input('Digite a quantidade: '))
         if int(produto['estoque']) - quantidade < 0:

@@ -22,8 +22,7 @@ class MenuProdutos:
                     produtoController.criarProduto()
                 case '2':
                     produtoController = ProdutosController.ProdutosController()
-                    for produto in produtoController.listarTodosProdutos():
-                        print(produto)
+                    produtoController.listarTodosProdutos()
                 case '3':
                     produtoController = ProdutosController.ProdutosController()
                     nomeProduto = input('Digite o nome do produto: ')

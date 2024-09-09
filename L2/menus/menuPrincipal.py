@@ -1,4 +1,5 @@
-import menuCliente, menuProdutos, menuVendedor, menuVendas
+from sys import exit
+from menus import menuCliente, menuProdutos, menuVendedor, menuVendas
 
 class MenuPrincipal:
     def exibir(self):

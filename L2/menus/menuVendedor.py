@@ -22,11 +22,11 @@ class MenuVendedor:
                     vendedorController.CriarVendedor()
                 case '2':
                     vendedorController = VendedorControllers.VendedorControllers()
-                    for vendedor in vendedorController.ListarTodosVendedores():
-                        print(vendedor)
+                    vendedorController.ListarTodosVendedores()
                 case '3':
                     vendedorController = VendedorControllers.VendedorControllers()
-                    print(vendedorController.ListarVendedor())
+                    email = input('Digite o email do vendedor: ')
+                    print(vendedorController.ListarVendedor(email))
                 case '4':
                     vendedorController = VendedorControllers.VendedorControllers()
                     vendedorController.AtualizarVendedor()

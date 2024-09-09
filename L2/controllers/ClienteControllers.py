@@ -34,13 +34,17 @@ class ClienteControllers:
         collection.insert_one(cliente.__dict__)
 
     def listarTodosClientes(self):
-        return collection.find()
+        clientes = collection.find()
+        for cliente in clientes:
+            print(f'Nome: {cliente['nome']} - Email: {cliente['email']} - Idade: {cliente['idade']}')
+        return
     
     def listarCliente(self, email):
-        if collection.find_one({'email': email}) is None:
+        cliente = collection.find_one({'email': email})
+        if cliente is None:
             print('Cliente não encontrado')
             return
-        return collection.find_one({'email': email})
+        return f'Nome: {cliente['nome']} - Email: {cliente['email']} - Idade: {cliente['idade']}'
     
     def atualizarCliente(self):
         email = input('Digite o email do cliente: ')
@@ -50,7 +54,9 @@ class ClienteControllers:
         nome = input('Digite o novo nome do cliente: ')
         idade = input('Digite a nova idade do cliente: ')
         novoEmail = input('Digite o novo email do cliente: ')
-        if collection.find_one({'email': novoEmail}) is not None:
+        if novoEmail == email:
+            print()
+        elif collection.find_one({'email': novoEmail}) is not None:
             print('Email já cadastrado')
             return
         pais = input('Digite o novo país do cliente: ')

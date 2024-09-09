@@ -38,14 +38,17 @@ class VendedorControllers:
         return vendedor
     
     def ListarTodosVendedores(self):
-        return collection.find()
+        vendedores = collection.find()
+        for vendedor in vendedores:
+            print(f'Nome: {vendedor['nome']} - Email: {vendedor['email']} - Idade: {vendedor['idade']}')
+        return
     
-    def ListarVendedor(self):
-        email = input('Digite o email do vendedor: ')
-        if collection.find_one({'email': email}) is None:
+    def ListarVendedor(self, email):
+        vendedor = collection.find_one({'email': email})
+        if vendedor is None:
             print('Vendedor não encontrado')
             return
-        return collection.find_one({'email': email})
+        return f'Nome: {vendedor['nome']} - Email: {vendedor['email']} - Idade: {vendedor['idade']}'
     
     def AtualizarVendedor(self):
         email = input('Digite o email do vendedor: ')
@@ -56,7 +59,9 @@ class VendedorControllers:
         nome = input('Digite o novo nome do vendedor: ')
         idade = input('Digite a nova idade do vendedor: ')
         novoEmail = input('Digite o novo email do vendedor: ')
-        if collection.find_one({'email': novoEmail}) is not None:
+        if novoEmail == email:
+            print
+        elif collection.find_one({'email': novoEmail}) is not None:
             print('Email já cadastrado')
             return
         

@@ -24,8 +24,7 @@ class MenuCliente:
                     clienteController.criarCliente()
                 case '2':
                     clienteController = ClienteControllers.ClienteControllers()
-                    for cliente in clienteController.listarTodosClientes():
-                        print(cliente)
+                    clienteController.listarTodosClientes()
                 case '3':
                     clienteController = ClienteControllers.ClienteControllers()
                     email = input('Digite o email do cliente: ')
