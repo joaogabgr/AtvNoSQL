@@ -38,10 +38,7 @@ class VendedorControllers:
         return vendedor
     
     def ListarTodosVendedores(self):
-        vendedores = collection.find()
-        for vendedor in vendedores:
-            print(f'Nome: {vendedor['nome']} - Email: {vendedor['email']} - Idade: {vendedor['idade']}')
-        return
+        return collection.find()
     
     def ListarVendedor(self, email):
         vendedor = collection.find_one({'email': email})
@@ -51,12 +48,26 @@ class VendedorControllers:
         return f'Nome: {vendedor['nome']} - Email: {vendedor['email']} - Idade: {vendedor['idade']}'
     
     def AtualizarVendedor(self):
-        email = input('Digite o email do vendedor: ')
-        if collection.find_one({'email': email}) is None:
+        vendedores = list(self.ListarTodosVendedores())
+        for index, vendedor in enumerate(vendedores):
+            print(f'{index} - Nome: {vendedor["nome"]} - Email: {vendedor["email"]} - Idade: {vendedor["idade"]}')
+        
+        index = int(input('Digite o índice do vendedor que deseja atualizar: '))
+        if index >= len(vendedores):
             print('Vendedor não encontrado')
             return
-        
-        nome = input('Digite o novo nome do vendedor: ')
+        vendedor = vendedores[index]
+        email = vendedor['email']
+        nome = vendedor['nome']
+
+        novoNome = input('Digite o novo nome do vendedor: ')
+
+        if nome == novoNome:
+            print()
+        elif collection.find_one({'nome': nome}) is not None:
+            print('Vendedor já cadastrado')
+            return
+
         idade = input('Digite a nova idade do vendedor: ')
         novoEmail = input('Digite o novo email do vendedor: ')
         if novoEmail == email:
@@ -83,14 +94,19 @@ class VendedorControllers:
         }
 
         ProdutoCollection.update_many({'vendedor.emailVendedor': email}, {'$set': {'vendedor.emailVendedor': novoEmail}})
-        collection.update_one({'email': email}, {'$set': {'nome': nome, 'idade': idade, 'email': novoEmail, 'endereco': endereco}})
+        collection.update_one({'email': email}, {'$set': {'nome': novoNome, 'idade': idade, 'email': novoEmail, 'endereco': endereco}})
 
     def DeletarVendedor(self):
-        email = input('Digite o email do vendedor: ')
-        if collection.find_one({'email': email}) is None:
+        vendedores = list(self.ListarTodosVendedores())
+        for index, vendedor in enumerate(vendedores):
+            print(f'{index} - Nome: {vendedor["nome"]} - Email: {vendedor["email"]} - Idade: {vendedor["idade"]}')
+        
+        index = int(input('Digite o índice do vendedor que deseja deletar: '))
+        if index >= len(vendedores):
             print('Vendedor não encontrado')
             return
-        
+        email = vendedores[index]['email']
+        ProdutoCollection.delete_many({'vendedor.emailVendedor': email})
         collection.delete_one({'email': email})
 
     def adicionarVenda(self, email, venda):

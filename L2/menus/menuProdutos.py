@@ -11,9 +11,8 @@ class MenuProdutos:
         while True:
             print('1 - Criar Produto')
             print('2 - Listar todos os Produtos')
-            print('3 - Listar Produto')
-            print('4 - Atualizar Produto')
-            print('5 - Deletar Produto')
+            print('3 - Atualizar Produto')
+            print('4 - Deletar Produto')
             print('0 - Voltar')
             opcao = input('Digite a opção desejada: ')
             match opcao:
@@ -22,15 +21,13 @@ class MenuProdutos:
                     produtoController.criarProduto()
                 case '2':
                     produtoController = ProdutosController.ProdutosController()
-                    produtoController.listarTodosProdutos()
+                    produtos = produtoController.listarTodosProdutos()
+                    for index, produto in enumerate(produtos):
+                        print(f'{index} - Nome: {produto['nome']} - Preço: {produto['preco']} - Estoque: {produto['estoque']}')
                 case '3':
                     produtoController = ProdutosController.ProdutosController()
-                    nomeProduto = input('Digite o nome do produto: ')
-                    print(produtoController.listarProduto(nomeProduto))
-                case '4':
-                    produtoController = ProdutosController.ProdutosController()
                     produtoController.atualizarProduto()
-                case '5':
+                case '4':
                     produtoController = ProdutosController.ProdutosController()
                     produtoController.deletarProduto()
                 case '0':

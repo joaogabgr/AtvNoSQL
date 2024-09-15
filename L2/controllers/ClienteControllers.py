@@ -1,5 +1,6 @@
 import connectMongo
 from models import Cliente
+from controllers import ProdutosController
 
 selectDatabase = connectMongo.client['MercadoLivre']
 collection = selectDatabase['usuario']
@@ -34,10 +35,7 @@ class ClienteControllers:
         collection.insert_one(cliente.__dict__)
 
     def listarTodosClientes(self):
-        clientes = collection.find()
-        for cliente in clientes:
-            print(f'Nome: {cliente['nome']} - Email: {cliente['email']} - Idade: {cliente['idade']}')
-        return
+        return collection.find()
     
     def listarCliente(self, email):
         cliente = collection.find_one({'email': email})
@@ -47,10 +45,15 @@ class ClienteControllers:
         return f'Nome: {cliente['nome']} - Email: {cliente['email']} - Idade: {cliente['idade']}'
     
     def atualizarCliente(self):
-        email = input('Digite o email do cliente: ')
-        if collection.find_one({'email': email}) is None:
+        clientes = list(self.listarTodosClientes())
+        for index, cliente in enumerate(clientes):
+            print(f'{index} - Nome: {cliente["nome"]} - Email: {cliente["email"]} - Idade: {cliente["idade"]}')
+        
+        index = int(input('Digite o índice do cliente que deseja deletar: '))
+        if index >= len(clientes):
             print('Cliente não encontrado')
             return
+        email = clientes[index]['email']
         nome = input('Digite o novo nome do cliente: ')
         idade = input('Digite a nova idade do cliente: ')
         novoEmail = input('Digite o novo email do cliente: ')
@@ -80,11 +83,56 @@ class ClienteControllers:
         collection.update_one({'email': email}, {'$set': Cliente})
 
     def deletarCliente(self):
-        email = input('Digite o email do cliente: ')
+        clientes = list(self.listarTodosClientes())
+        for index, cliente in enumerate(clientes):
+            print(f'{index} - Nome: {cliente["nome"]} - Email: {cliente["email"]} - Idade: {cliente["idade"]}')
+        
+        index = int(input('Digite o índice do cliente que deseja deletar: '))
+        if index >= len(clientes):
+            print('Cliente não encontrado')
+            return
+        email = clientes[index]['email']
         if collection.find_one({'email': email}) is None:
             print('Cliente não encontrado')
             return
         collection.delete_one({'email': email})
+
+    def adicionarFavorito(self):
+        clientes = list(self.listarTodosClientes())
+        for index, cliente in enumerate(clientes):
+            print(f'{index} - Nome: {cliente["nome"]} - Email: {cliente["email"]} - Idade: {cliente["idade"]}')
+        
+        index = int(input('Digite o índice do cliente que deseja adicionar o favorito: '))
+        if index >= len(clientes):
+            print('Cliente não encontrado')
+            return
+        email = clientes[index]['email']
+        produtos = list(ProdutosController.ProdutosController().listarTodosProdutos())
+        for index, produto in enumerate(produtos):
+            print(f'{index} - Nome: {produto["nome"]} - Preço: {produto["preco"]} - Estoque: {produto["estoque"]}')
+        
+        index = int(input('Digite o índice do produto que deseja adicionar aos favoritos: '))
+        if index >= len(produtos):
+            print('Produto não encontrado')
+            return
+        produto = produtos[index]
+        favorito = {
+            'idProduto': produto['_id'],
+            'nomeProduto': produto['nome'],
+            'valorProduto': produto['preco']
+        }
+        collection.update_one({'email': email}, {'$push': {'favoritos': favorito}})
+    
+
+    def atualizarFavorito(self, idProduto, novoNome, preco):
+        collection.update_many(
+            {'favoritos.idProduto': idProduto},  # Filtro para encontrar o produto pelo idProduto
+            {'$set': {
+                'favoritos.$[element].nomeProduto': novoNome,
+                'favoritos.$[element].valorProduto': preco
+            }},
+            array_filters=[{'element.idProduto': idProduto}]  # Usar idProduto como filtro
+        )
 
     def adicionarCompra(self, email, compra):
         collection.update_one({'email': email}, {'$push': {'compras': compra}})

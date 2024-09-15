@@ -9,20 +9,23 @@ ClienteCollection = selectDatabase['cliente']
 
 class VendasControllers:
     def CriarVenda(self):
-        ClienteControllers.ClienteControllers().listarTodosClientes()
-        emailCliente = input('Digite o email do cliente: ')
+        clientes = list(ClienteControllers.ClienteControllers().listarTodosClientes())
+        for index, cliente in enumerate(clientes):
+            print(f'{index} - Nome: {cliente["nome"]} - Email: {cliente["email"]} - Idade: {cliente["idade"]}')
         
-        if ClienteControllers.ClienteControllers().listarCliente(emailCliente) == None:
+        index = int(input('Digite o índice do cliente que deseja comprar: '))
+        if index >= len(clientes):
+            print('Cliente não encontrado')
             return
-        
-        ProdutosController.ProdutosController().listarTodosProdutos()
+        emailCliente = clientes[index]['email']
 
-        nomeProduto = input('Digite o nome do produto: ')
-        produtoTeste = ProdutosController.ProdutosController().listarProduto(nomeProduto)
-        if produtoTeste == None:
-            return
-        else:
-            produto = ProdutoCollection.find_one({'nome': nomeProduto})
+        produtos = list(ProdutosController.ProdutosController().listarTodosProdutos())
+        for index, produto in enumerate(produtos):
+            print(f'{index} - Nome: {produto["nome"]} - Preço: {produto["preco"]} - Estoque: {produto["estoque"]}')
+        
+        index = int(input('Digite o índice do produto que deseja comprar: '))
+        produto = produtos[index]
+        nomeProduto = produto['nome']
         
         quantidade = int(input('Digite a quantidade: '))
         if int(produto['estoque']) - quantidade < 0:

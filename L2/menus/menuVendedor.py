@@ -22,7 +22,9 @@ class MenuVendedor:
                     vendedorController.CriarVendedor()
                 case '2':
                     vendedorController = VendedorControllers.VendedorControllers()
-                    vendedorController.ListarTodosVendedores()
+                    vendedores = vendedorController.ListarTodosVendedores()
+                    for index, vendedor in enumerate(vendedores):
+                        print(f'{index} - Nome: {vendedor['nome']} - Email: {vendedor['email']} - Idade: {vendedor['idade']}')
                 case '3':
                     vendedorController = VendedorControllers.VendedorControllers()
                     email = input('Digite o email do vendedor: ')

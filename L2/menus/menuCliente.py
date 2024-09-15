@@ -15,6 +15,7 @@ class MenuCliente:
             print('3 - Listar Cliente')
             print('4 - Atualizar Cliente')
             print('5 - Deletar Cliente')
+            print('6 - Adicionar Favorito')
             print('0 - Sair')
             opcao = input('Digite a opção desejada: ')
             
@@ -24,7 +25,9 @@ class MenuCliente:
                     clienteController.criarCliente()
                 case '2':
                     clienteController = ClienteControllers.ClienteControllers()
-                    clienteController.listarTodosClientes()
+                    clientes = clienteController.listarTodosClientes()
+                    for index, cliente in enumerate(clientes):
+                        print(f'{index} - Nome: {cliente['nome']} - Email: {cliente['email']} - Idade: {cliente['idade']}')
                 case '3':
                     clienteController = ClienteControllers.ClienteControllers()
                     email = input('Digite o email do cliente: ')
@@ -35,6 +38,9 @@ class MenuCliente:
                 case '5':
                     clienteController = ClienteControllers.ClienteControllers()
                     clienteController.deletarCliente()
+                case '6':
+                    clienteController = ClienteControllers.ClienteControllers()
+                    clienteController.adicionarFavorito()
                 case '0':
                     break
                 case _:
