@@ -219,10 +219,16 @@ export default class ProductsControllers extends Entry {
                 evaluation = parseFloat(Entry.reciveText("Enter a valid evaluation (0-5):"));
             }
             let comment = Entry.reciveText("Enter the comment:");
-            let evaluationClient = { idClient: clients._id, NameClient: clients.nameClient, note: evaluation, comment: comment };
+            let evaluationClient = new Evaluation(clients._id, product._id, product.nameProduct, clients.nameClient, evaluation, comment);
 
             product.evaluation = product.evaluation || [];
             product.evaluation.push(evaluationClient);
+
+            clients.evaluations = clients.evaluations || [];
+            clients.evaluations.push(evaluationClient);
+
+            await clientsCollection.updateOne({ _id: clients._id }, { $set: clients });
+
             await productsCollection.updateOne({ _id: product._id }, { $set: { evaluation: product.evaluation } });
             console.log("Evaluation added successfully");
         } catch (error) {

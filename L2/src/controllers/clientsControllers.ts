@@ -118,6 +118,19 @@ export default class ClientsControllers extends Entry {
             } else {
                 console.log("   No shopping history.");
             }
+
+            console.log("Evaluations:");
+            if (client.evaluations && client.evaluations.length > 0) {
+                client.evaluations.forEach((evaluation, index) => {
+                    console.log(`   Evaluation ${index + 1}:`);
+                    console.log(`     Product: ${evaluation.nameProduct}`);
+                    console.log(`     Note: ${evaluation.note}`);
+                    console.log(`     Comment: ${evaluation.comment}`);
+                });
+            } else {
+                console.log("   No evaluations.");
+            }
+            
         } catch (error) {
             console.error("Error reading client:", error);
         }
