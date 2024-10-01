@@ -8,16 +8,18 @@ export default class Client {
     _id: ObjectId;
     nameClient: string;
     emailClient: string;
+    passwordClient: string;
     ageClient: number;
     addressClient: Address;
     favorites: Product[]
     shopping: Product[];
     evaluations: Evaluation[];
 
-    constructor(nameClient: string, emailClient: string, ageClient: number, addressClient: Address) {
+    constructor(nameClient: string, emailClient: string, passwordClient: string, ageClient: number, addressClient: Address) {
         this._id = new ObjectId();
         this.nameClient = nameClient;
         this.emailClient = emailClient;
+        this.passwordClient = passwordClient;
         this.ageClient = ageClient;
         this.addressClient = addressClient;
         this.favorites = [];
