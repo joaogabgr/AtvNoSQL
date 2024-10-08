@@ -235,4 +235,56 @@ export default class ProductsControllers extends Entry {
             console.error("Error adding evaluation:", error);
         }
     }
+
+    public static async removeEvaluation() {
+        try {
+            const productsCollection = await getProductsCollection();
+            const clientsCollection = await getClientsCollection();
+            const clients = await ClientsControllers.listClientByIndex();
+            
+            if (!clients) {
+                console.log("Client not found");
+                return;
+            }
+    
+            const product = await this.listProductByIndex() as Product;
+            if (!product) {
+                console.log("Product not found");
+                return;
+            }
+    
+            if (!clients.evaluations || clients.evaluations.length === 0) {
+                console.log("No evaluations found for this client.");
+                return;
+            }
+    
+            clients.evaluations.forEach((evaluation, index) => {
+                console.log(`Evaluation ${index + 1}: ${evaluation.comment} (Rating: ${evaluation.note})`);
+            });
+    
+            let indexEvaluation = parseInt(Entry.reciveText("Enter the evaluation index:"));
+            while (isNaN(indexEvaluation) || indexEvaluation < 1 || indexEvaluation > clients.evaluations.length) {
+                indexEvaluation = parseInt(Entry.reciveText("Enter a valid evaluation index:"));
+            }
+    
+            const evaluationToRemove = clients.evaluations[indexEvaluation - 1];
+            console.log("Evaluation to remove:", evaluationToRemove);
+
+            product.evaluation = product.evaluation.filter(evaluation => 
+                evaluation.idProduct && evaluation.idProduct.equals(evaluationToRemove._id)
+            );
+    
+            clients.evaluations = clients.evaluations.filter(evaluation => 
+                evaluation._id && evaluation._id.equals(evaluationToRemove._id)
+            );
+    
+            await clientsCollection.updateOne({ _id: clients._id }, { $set: { evaluations: clients.evaluations } });
+            await productsCollection.updateOne({ _id: product._id }, { $set: { evaluation: product.evaluation } });
+    
+            console.log("Evaluation removed successfully");
+        } catch (error) {
+            console.error("Error removing evaluation:", error);
+        }
+    }
+    
 }

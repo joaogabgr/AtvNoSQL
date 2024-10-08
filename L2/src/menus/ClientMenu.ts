@@ -16,11 +16,13 @@ export default class ClientMenu extends Entry {
             console.log("7 - Remove favorite product");
             console.log("8 - Buy product");
             console.log("9 - Add evaluation");
+            console.log("10 - Remove evaluation");
+            
             console.log("0 - Back");
             
             let option = parseInt(Entry.reciveText("Enter the option:"));
-            while (isNaN(option) || option < 0 || option > 9) {
-                option = parseInt(Entry.reciveText("Enter a valid option (0-8):"));
+            while (isNaN(option) || option < 0 || option > 10) {
+                option = parseInt(Entry.reciveText("Enter a valid option (0-10):"));
             }
 
             switch (option) {
@@ -51,6 +53,8 @@ export default class ClientMenu extends Entry {
                 case 9:
                     await ProductsControllers.addEvaluation();
                     break;
+                case 10:
+                    await ProductsControllers.removeEvaluation();
                 case 0:
                     running = false;
                     break;
