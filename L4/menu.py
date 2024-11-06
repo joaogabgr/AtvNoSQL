@@ -1,7 +1,6 @@
-# menu.py
 from controllers.mercadoLivreDB import MercadoLivreDB
 
-def show_menu(db):
+def exibir_menu(db):
     while True:
         print("\nMenu:")
         print("1. Adicionar Usuário")
@@ -13,105 +12,98 @@ def show_menu(db):
         print("7. Deletar Compra")
         print("8. Sair")
 
-        choice = input("Escolha uma opção: ")
+        opcao = input("Escolha uma opção: ")
 
-        if choice == '1':
-            name = input("Digite o nome do usuário: ")
+        if opcao == '1':
+            nome = input("Digite o nome do usuário: ")
             while True:
                 try:
-                    age = int(input("Digite a idade do usuário: "))
+                    idade = int(input("Digite a idade do usuário: "))
                     break
                 except ValueError:
                     print("Erro: A idade deve ser um número inteiro válido. Tente novamente.")
-            address = input("Digite o endereço do usuário: ")
-            db.insert_user(name, age, address)
+            endereco = input("Digite o endereço do usuário: ")
+            db.inserir_usuario(nome, idade, endereco)
 
-        elif choice == '2':
-            name = input("Digite o nome do vendedor: ")
+        elif opcao == '2':
+            nome = input("Digite o nome do vendedor: ")
             while True:
                 try:
-                    age = int(input("Digite a idade do vendedor: "))
+                    idade = int(input("Digite a idade do vendedor: "))
                     break
                 except ValueError:
                     print("Erro: A idade deve ser um número inteiro válido. Tente novamente.")
-            address = input("Digite o endereço do vendedor: ")
-            db.insert_seller(name, age, address)
+            endereco = input("Digite o endereço do vendedor: ")
+            db.inserir_vendedor(nome, idade, endereco)
 
-        elif choice == '3':
-            name = input("Digite o nome do produto: ")
+        elif opcao == '3':
+            nome = input("Digite o nome do produto: ")
             while True:
                 try:
-                    price = float(input("Digite o preço do produto: "))
+                    valor = float(input("Digite o preço do produto: "))
                     break
                 except ValueError:
                     print("Erro: O preço deve ser um número válido. Tente novamente.")
-            seller_id = select_from_list(db.get_all_sellers(), "vendedor")
-            db.insert_product(name, price, seller_id)
+            id_vendedor = selecionar_da_lista(db.obter_todos_vendedores(), "vendedor")
+            db.inserir_produto(nome, valor, id_vendedor)
 
-        elif choice == '4':
-            user_id = select_from_list(db.get_all_users(), "usuário")
-            product_id = select_from_list(db.get_all_products(), "produto")
+        elif opcao == '4':
+            id_usuario = selecionar_da_lista(db.obter_todos_usuarios(), "usuário")
+            id_produto = selecionar_da_lista(db.obter_todos_produtos(), "produto")
             while True:
                 try:
-                    quantity = int(input("Digite a quantidade: "))
+                    quantidade = int(input("Digite a quantidade: "))
                     break
                 except ValueError:
                     print("Erro: A quantidade deve ser um número inteiro válido. Tente novamente.")
-            product = db.get_product_by_id(product_id)
-            if product:
-                price = product['valor']
-                value = price * quantity
-                db.insert_purchase(user_id, product_id, quantity, value)
+            produto = db.obter_produto_por_id(id_produto)
+            if produto:
+                valor = produto['valor'] * quantidade
+                db.inserir_compra(id_usuario, id_produto, quantidade, valor)
             else:
-                print(f"Produto com ID {product_id} não encontrado.")
+                print(f"Produto com ID {id_produto} não encontrado.")
 
-        elif choice == '5':
-            user_id = select_from_list(db.get_all_users(), "usuário")
-            new_name = input("Digite o novo nome (deixe vazio para não alterar): ")
-            new_age = input("Digite a nova idade (deixe vazio para não alterar): ")
-            if new_age:
+        elif opcao == '5':
+            id_usuario = selecionar_da_lista(db.obter_todos_usuarios(), "usuário")
+            novo_nome = input("Digite o novo nome (deixe vazio para não alterar): ")
+            nova_idade = input("Digite a nova idade (deixe vazio para não alterar): ")
+            if nova_idade:
                 while True:
                     try:
-                        new_age = int(new_age)
+                        nova_idade = int(nova_idade)
                         break
                     except ValueError:
                         print("Erro: A idade deve ser um número inteiro válido. Tente novamente.")
-                        new_age = input("Digite a nova idade (deixe vazio para não alterar): ")
-            new_address = input("Digite o novo endereço (deixe vazio para não alterar): ")
-            db.update_user(user_id, new_name if new_name else None, new_age if new_age else None, new_address if new_address else None)
+                        nova_idade = input("Digite a nova idade (deixe vazio para não alterar): ")
+            novo_endereco = input("Digite o novo endereço (deixe vazio para não alterar): ")
+            db.atualizar_usuario(id_usuario, novo_nome if novo_nome else None, nova_idade if nova_idade else None, novo_endereco if novo_endereco else None)
 
-        elif choice == '6':
-            product_id = select_from_list(db.get_all_products(), "produto")
-            db.search_product(product_id)
+        elif opcao == '6':
+            id_produto = selecionar_da_lista(db.obter_todos_produtos(), "produto")
+            db.buscar_produto(id_produto)
 
-        elif choice == '7':
-            purchases = db.get_all_purchases()
-            purchase_id = select_from_list_delete(purchases, "compra", db)
-            db.delete_purchase(purchase_id)
+        elif opcao == '7':
+            compras = db.obter_todas_compras()
+            id_compra = selecionar_da_lista_exclusao(compras, "compra", db)
+            db.deletar_compra(id_compra)
 
-        elif choice == '8':
+        elif opcao == '8':
             print("Saindo...")
             break
 
         else:
             print("Opção inválida. Por favor, escolha uma opção válida.")
 
+def selecionar_da_lista(itens, nome_lista):
+    for idx, item in enumerate(itens):
+        print(f"{idx + 1}. {item[1] if len(item) > 1 else str(item[0])}")
+    indice_selecionado = int(input(f"Escolha um {nome_lista}: ")) - 1
+    return itens[indice_selecionado][0]
 
-# Função para exibir uma lista e selecionar o índice
-def select_from_list(items, list_name):
-    # Exibe a lista de itens com um número correspondente
-    for idx, item in enumerate(items):
-        # Acessando pelos índices das tuplas
-        print(f"{idx + 1}. {item[1] if len(item) > 1 else str(item[0])}")  # item[1] é o nome
-    
-    # Lê a seleção do usuário
-    selected_idx = int(input(f"Escolha um {list_name}: ")) - 1
-    return items[selected_idx][0]  # Retorna o ID (primeiro elemento da tupla)
-
-def select_from_list_delete(items, list_name, db):
-    for idx, item in enumerate(items):
-        user_name = db.get_user_name(item[1])
-        product_name = db.get_product_name(item[2])
-        print(f"{idx + 1}. Usuário: {user_name}, Produto: {product_name}")
-    selected_idx = int(input(f"Escolha uma {list_name}: ")) - 1
-    return items[selected_idx][0]
+def selecionar_da_lista_exclusao(itens, nome_lista, db):
+    for idx, item in enumerate(itens):
+        nome_usuario = db.obter_nome_usuario(item[1])
+        nome_produto = db.obter_nome_produto(item[2])
+        print(f"{idx + 1}. Usuário: {nome_usuario}, Produto: {nome_produto}")
+    indice_selecionado = int(input(f"Escolha uma {nome_lista}: ")) - 1
+    return itens[indice_selecionado][0]
