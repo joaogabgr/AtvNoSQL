@@ -21,6 +21,7 @@ def main():
         print("6. Sair")
 
         choice = input("Escolha uma opção: ")
+        client_controller = ClientControllers(db, redis_client)
 
         if choice == '1':
             email = input("Digite seu email: ")
@@ -35,28 +36,24 @@ def main():
 
         elif choice == '2':
             if user_id:
-                client_controller = ClientControllers(db, redis_client)
                 client_controller.add_favorite_product(user_id)
             else:
                 print("Você precisa estar logado para adicionar produtos aos favoritos.")
 
         elif choice == '3':
             if user_id:
-                client_controller = ClientControllers(db, redis_client)
                 client_controller.remove_favorite_product(user_id)
             else:
                 print("Você precisa estar logado para remover produtos dos favoritos.")
 
         elif choice == '4':
             if user_id:
-                client_controller = ClientControllers(db, redis_client)
                 client_controller.add_evaluation(user_id)
             else:
                 print("Você precisa estar logado para adicionar uma avaliação.")
 
         elif choice == '5':
             if user_id:
-                client_controller = ClientControllers(db, redis_client)
                 client_controller.remove_evaluation(user_id)
             else:
                 print("Você precisa estar logado para remover uma avaliação.")
